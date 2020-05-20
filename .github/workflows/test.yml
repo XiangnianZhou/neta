@@ -17,4 +17,4 @@ jobs:
         deno-version: v1.x
       
     - name: Run test
-      run: deno test
+      run: deno test --allow-read
