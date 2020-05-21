@@ -1,5 +1,6 @@
 # neta
-![ci](https://github.com/XiangnianZhou/neta/workflows/ci/badge.svg)
+[![ci](https://github.com/XiangnianZhou/neta/workflows/CI/badge.svg)](https://github.com/XiangnianZhou/neta/actions)
+
 A SRT and ASS/SSA  subtitle parser for Deno.
 
 
