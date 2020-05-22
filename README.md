@@ -1,16 +1,31 @@
-# neta
+# Neta
 [![ci](https://github.com/XiangnianZhou/neta/workflows/CI/badge.svg)](https://github.com/XiangnianZhou/neta/actions)
 
-A SRT and ASS/SSA  subtitle parser for Deno.
+A SRT and ASS/SSA subtitle parser for Deno.
 
+# Usage
+
+```typescript
+import { srtToText } from 'https://deno.land/x/neta/mod.ts';
+
+const srt = await Deno.readTextFile('./test.srt');
+const text = srtToText(srt);
+await Deno.writeTextFile('./subtitle.txt', text);
+```
+
+Becuase APIs are not stable enough now, I recommend that you specify the version when you import Neta. like this:
+
+```typescript
+import { srtToText } from 'https://deno.land/x/neta@v0.1.0/mod.ts';
+```
 
 # API
 
 * SRT
-    *  `srtParser()` Converts srt subtitles into array of objects
+    * `srtParser()` Converts srt subtitles into array of objects
     * `srtToText()` extract text from srt subtitle
 * ASS/SSA
-    * `assParser()` Converts ASSString ( E.g. Deno.readTextFileSync('t.ass') ) to JSON
+    * `assParser()` Converts ASSString to JSON
     * `assTosrt()` Convert ASS to SRT
     * `assToText()` Convert ASS to plain text
 
