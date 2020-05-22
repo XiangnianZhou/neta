@@ -1,12 +1,12 @@
 import { assertEquals } from './deps.ts';
 import { srtParser, srtToText } from './srt_parser.ts';
-import { assParser, assToText, assTosrt } from './ass_parser.ts';
+import { assParser, assToText, assToSrt } from './ass_parser.ts';
 import { 
     srtParser as srtPrserMod, 
     srtToText as srtToTextMod, 
     assParser as assParserMod, 
     assToText as assToTextMod, 
-    assTosrt as assTosrtMod
+    assToSrt as assToSrtMod
 } from './mod.ts';
 
 Deno.test('exports nate APIs', (): void => {
@@ -14,5 +14,5 @@ Deno.test('exports nate APIs', (): void => {
     assertEquals(srtToText, srtToTextMod);
     assertEquals(assParser, assParserMod);
     assertEquals(assToText, assToTextMod);
-    assertEquals(assTosrt, assTosrtMod);
+    assertEquals(assToSrt, assToSrtMod);
 });

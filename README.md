@@ -26,7 +26,7 @@ import { srtToText } from 'https://deno.land/x/neta@v0.1.0/mod.ts';
     * `srtToText()` extract text from srt subtitle
 * ASS/SSA
     * `assParser()` Converts ASSString to JSON
-    * `assTosrt()` Convert ASS to SRT
+    * `assToSrt()` Convert ASS to SRT
     * `assToText()` Convert ASS to plain text
 
 # Example

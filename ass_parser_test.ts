@@ -1,4 +1,4 @@
-import { assParser, ASSJson, Event, assToText, assTosrt} from "./ass_parser.ts";
+import { assParser, ASSJson, Event, assToText, assToSrt} from "./ass_parser.ts";
 import { assertEquals } from './deps.ts';
 
 const assString = Deno.readTextFileSync('./test.ass');
@@ -147,7 +147,7 @@ The second line in subtitle
 Clear the mortar hole! Right and left!`;
 
 Deno.test('convert ass to srt', (): void => {
-    const actualSrt = assTosrt(assString)
+    const actualSrt = assToSrt(assString)
     assertEquals(actualSrt, expectedSrt);
 });
 

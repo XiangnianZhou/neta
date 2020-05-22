@@ -117,7 +117,7 @@ export function assParser(assString: string = ''): ASSJson {
 }
 
 // Convert ASS to SRT
-export function assTosrt(ass: ASSJson | string) {
+export function assToSrt(ass: ASSJson | string) {
     const srts = assToSrtAST(ass);
     return srts.map(segment => {
         const { start, num, end, text } = segment;
