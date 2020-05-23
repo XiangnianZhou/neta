@@ -22,10 +22,10 @@ import { srtToText } from 'https://deno.land/x/neta@v0.2.0/mod.ts';
 # API
 
 * SRT
-    * `srtParser()` Converts srt string into array of objects
-    * `srtToText()` extract text from srt subtitle
+    * `srtParser()` Convert SRT string into array of objects
+    * `srtToText()` extract text from SRT subtitle
 * ASS/SSA
-    * `assParser()` Converts ASS string to JSON
+    * `assParser()` Convert ASS string to JSON
     * `assToSrt()` Convert ASS to SRT
     * `assToText()` Convert ASS to plain text
 
