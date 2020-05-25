@@ -5,7 +5,7 @@ const HOUR = 60 * MINUTE;
 export function $parseTime(timeStr: string = ""): number {
     let match = timeStr.match(/(\d+):(\d+):(\d+),(\d+)/);
     match = match || Array(5).fill(0);
-    const [h, m, s, ms] = match.slice(1).map((i) => +i);
+    const [,h, m, s, ms] = match.map((i) => +i);
     return h * HOUR + m * MINUTE + s * SECOND + ms;
 }
 
