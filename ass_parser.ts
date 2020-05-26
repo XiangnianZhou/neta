@@ -1,4 +1,4 @@
-import { $merge } from './util.ts';
+import { $merge, $stripBom } from './util.ts';
 
 export interface ScriptInfo {
     isComment: boolean;
@@ -82,6 +82,7 @@ interface SrtASTExpression {
 
 // Converts ASSString ( E.g. Deno.readTextFileSync('t.ass') ) to JSON
 export function assParser(assString: string = ''): ASSJson {
+    assString = $stripBom(assString).replace(/\r?\n/g, '\n');
     if (!assString.startsWith('[Script Info]')) {
         throw 'ASS string should start with “[Script Info]”';
     }
@@ -95,11 +96,11 @@ export function assParser(assString: string = ''): ASSJson {
         list: []
     };
 
-    const sections = assString.split(/^\[(.*?)]\n/mg).slice(1);
+    const sections = assString.split(/^\[(.+?)\]\n/mg).slice(1);
     const otherSections: {[key: string]: string} = {};
     for(let i = 0; i < sections.length; i+= 2) {
         const sectionName = sections[i];
-        const lines: string[] = sections[i + 1].split(/\r?\n/).filter(l => !/^\s*$/.test(l));
+        const lines: string[] = sections[i + 1].split(/\n/).filter(l => !/^\s*$/.test(l));
         
         if (sectionName === 'Script Info') {
             scriptInfo = parseInfo(lines);

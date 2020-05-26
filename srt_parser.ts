@@ -1,4 +1,4 @@
-import { $parseTime } from './util.ts';
+import { $parseTime, $stripBom } from './util.ts';
 
 interface ASTExpression {
     start: number,
@@ -12,8 +12,9 @@ interface ASTExpression {
  * Converts srt subtitles into array of objects
  */
 export function srtParser(srtString: string = ''): ASTExpression[] {
-    return srtString.split(/(?:\r?\n){2}/).filter(t => t).map(segment => {
-        const lines: string[] = segment.split(/\r?\n/);
+    srtString = $stripBom(srtString).replace(/\r?\n/g, '\n');
+    return srtString.split(/\n{2}/).filter(t => t).map(segment => {
+        const lines: string[] = segment.split(/\n/);
         const num: number = +lines[0];
         const rawTime: string[] = lines[1].split(' --> ');
         const [ start, end ] = rawTime.map(t => $parseTime(t));
