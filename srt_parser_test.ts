@@ -32,9 +32,9 @@ Deno.test('srtParser: text separated by \\r\\n', (): void => {
 });
 
 Deno.test('srt string to text', (): void => {
-    const srt = '1\n00:00:00,001 --> 00:00:00,002\nFive men is a juicy opportunity.\nOne man is a waste of ammo.';
+    const mockSrt = '1\n00:00:00,001 --> 00:00:00,002\nFive men is a juicy opportunity.\nOne man is a waste of ammo.';
     const expected = 'Five men is a juicy opportunity.\nOne man is a waste of ammo.';
-    const actral = srtToText(srt);
+    const actral = srtToText(mockSrt);
     assertEquals(actral, expected);
 });
 
@@ -43,4 +43,12 @@ Deno.test('srt AST to text', (): void => {
     const expected = 'Five men is a juicy opportunity.\nOne man is a waste of ammo.\nKeep the sand out of your weapons!';
     const actral = srtToText(srt);
     assertEquals(actral, expected);
+});
+
+Deno.test('srt Blank line', (): void => {
+    const mockSrt = '1\n00:00:00,001 --> 00:00:00,002\n\n\n2\n00:01:00,001 --> 00:02:00,002\nOne\n\n';
+    const actual = srtParser(mockSrt);
+    assertEquals(actual[0].text, '');
+    assertEquals(actual[1].text, 'One');
+    assertEquals(actual.length, 2);
 });
