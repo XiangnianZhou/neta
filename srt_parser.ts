@@ -12,7 +12,7 @@ interface ASTExpression {
  * Converts srt subtitles into array of objects
  */
 export function srtParser(srtString: string = ''): ASTExpression[] {
-    srtString = $stripBom(srtString).replace(/\r?\n/g, '\n');
+    srtString = $stripBom(srtString).replace(/\r?\n/g, '\n').replace(/\n+$/, '');
     return srtString.split(/\n{2,}/).filter(t => t).map(segment => {
         const lines: string[] = segment.split(/\n/);
         const num: number = +lines[0];
