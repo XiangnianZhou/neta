@@ -45,3 +45,10 @@ Keep the sand out of your weapons!`;
 const ast = srtParser(srtString);
 console.log(ast);
 ```
+
+# TODO
+
+* [ ] Chinese documents;
+* [ ] Parse SRT Formatting;
+* [ ] Parse ASS override;
+* [ ] Support Node.js;
