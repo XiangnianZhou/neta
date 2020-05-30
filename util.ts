@@ -22,9 +22,9 @@ export function $merge(keyArray: string[] = [], valueArray: any[] = []): object 
 }
 
 
-export function $stripBom(fileContent: string): string {
-    if (fileContent.charCodeAt(0) === 0xFEFF) {
-        return fileContent.slice(1);
-    }
-    return fileContent;
-}
+// export function $stripBom(fileContent: string): string {
+//     if (fileContent.charCodeAt(0) === 0xFEFF) {
+//         return fileContent.slice(1);
+//     }
+//     return fileContent;
+// }

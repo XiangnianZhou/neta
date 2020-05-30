@@ -1,4 +1,4 @@
-import { $parseTime, $merge, $stripBom } from './util.ts';
+import { $parseTime, $merge } from './util.ts';
 import { assertEquals } from './deps.ts';
 
 Deno.test('util.parseTime() function', (): void => {
@@ -18,12 +18,4 @@ Deno.test('util.merge() function', (): void => {
         key3: 'v3'
     }
     assertEquals(actual, expected);
-});
-
-
-Deno.test('util.$stripBom function', () => {
-    const corder = new TextDecoder();
-    const arr = new Uint8Array([ 239, 187, 191, 48, 49, 50 ]);
-    const fileContent = corder.decode(arr);
-    assertEquals($stripBom(fileContent), '012');
 });
