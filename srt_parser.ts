@@ -21,7 +21,7 @@ export function srtParser(srtData: string | Uint8Array = ''): SrtArray {
     let srtString: string = typeof srtData === 'string' ? srtData : $utfDecoder(srtData);
     srtString = srtString.replace(/\r?\n/g, '\n').replace(/\n+$/, '');
     const result = new SrtArray();
-    for (let segment of srtString.split(/\n{2,}/)) {
+    for (let segment of srtString.split(/\n{2,}(?=\d+)/)) {
         if(!!segment) {
             const lines: string[] = segment.split(/\n/);
             const num: number = +lines[0];
