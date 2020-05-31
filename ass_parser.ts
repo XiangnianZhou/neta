@@ -1,4 +1,4 @@
-import { $merge } from './util.ts';
+import { $merge, $utfDecoder } from './util.ts';
 
 export interface ScriptInfo {
     isComment: boolean;
@@ -64,12 +64,17 @@ interface Events {
     list: Array<Event | { descriptor: string,  info: string }>;
 }
 
-export interface ASSJson {
+export interface AssJson {
     scriptInfo: ScriptInfo[];
     v4Styles: V4Styles;
     events: Events;
-    // other sections: ASSJson[sectionName] = rawString
-    [name: string]: ScriptInfo[] | V4Styles | Events | string;
+    // other sections: AssJson[sectionName] = rawString
+    [name: string]: any;
+}
+
+interface AssData extends AssJson {
+    toSrt(): string;
+    toText(): string;
 }
 
 interface SrtASTExpression {
@@ -79,9 +84,9 @@ interface SrtASTExpression {
     text: string;
 }
 
-
 // Converts ASSString ( E.g. Deno.readTextFileSync('t.ass') ) to JSON
-export function assParser(assString: string = ''): ASSJson {
+export function assParser(ass: string | Uint8Array = ''): AssData {
+    let assString: string = typeof ass === 'string' ? ass : $utfDecoder(ass);
     assString = assString.replace(/\r?\n/g, '\n');
     if (!assString.startsWith('[Script Info]')) {
         throw 'ASS string should start with “[Script Info]”';
@@ -112,32 +117,34 @@ export function assParser(assString: string = ''): ASSJson {
             otherSections[sectionName] = sections[i + 1];
         }
     }
+    const assJson: AssJson = { scriptInfo, v4Styles, events, ...otherSections }
     return {
-        scriptInfo, v4Styles, events, ...otherSections
+        ...assJson,
+        toSrt() {
+            return toSrt(assJson)
+        },
+        toText() {
+            return toText(assJson);
+        }
     }
 }
 
 // Convert ASS to SRT
-export function assToSrt(ass: ASSJson | string) {
-    const srts = assToSrtAST(ass);
-    return srts.map(segment => {
-        const { start, num, end, text } = segment;
-        return `${num}\n${start} --> ${end}\n${text}`;
-    }).join('\n\n');
+export function assToSrt(ass: string | Uint8Array): string {
+    const ast: AssJson = assParser(ass);
+    return toSrt(ast);
 }
 
 // Convert ASS to plain text
-export function assToText(ass: ASSJson | string) {
-    const list = assToSrtAST(ass);
-    return list.map(segment => segment.text).join('\n');
+export function assToText(ass: string | Uint8Array): string {
+    const ast: AssJson = assParser(ass);
+    return toText(ast);
 }
 
 // Convert Ass to AST of SRT
-function assToSrtAST(ass: ASSJson | string): SrtASTExpression[] {
-    if (typeof ass === 'string') {
-        ass = assParser(ass);
-    }
-    return ass.events.list.filter(e => (<Event>e).Text).map((event, index) => {
+function assToSrtAST(assData: AssJson): SrtASTExpression[] {
+    // let assData: AssJson = assParser(ass);
+    return assData.events.list.filter(e => (<Event>e).Text).map((event, index) => {
         const dialogue = event as Event;
         const segmentText = dialogue.Text.data.filter(t => {
             return !/^(\s|\\n|\\N)*$/.test(t.text);
@@ -263,3 +270,15 @@ function parseEvents(lines: string[]): Events {
 }
 
 
+function toSrt(assJson: AssJson): string {
+    const srtData: SrtASTExpression[] = assToSrtAST(assJson);
+    return srtData.map(segment => {
+        const { start, num, end, text } = segment;
+        return `${num}\n${start} --> ${end}\n${text}`;
+    }).join('\n\n');
+}
+
+function toText(assJson: AssJson): string {
+    const srtData: SrtASTExpression[] = assToSrtAST(assJson);
+    return srtData.map(segment => segment.text).join('\n');
+}
