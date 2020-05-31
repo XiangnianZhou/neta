@@ -35,17 +35,16 @@ export function $utfDecoder(input: Uint8Array): string {
         ignoreBOM: true
     });
     const [ char1, char2 ] = input;
-    const isUTF16LE = char1 === 0xff && char2 === 0xfe;
-    const isUTF16GE = char1 === 0xfe && char2 === 0xff;
-    if(isUTF16GE || isUTF16LE) {
-        const codeSet = [];
-        for (let i = 2; i < input.length; i+=2) {
-            const code = isUTF16GE
-            ? input[i+1]|(input[i] << 8)
-            : input[i]|(input[i + 1] << 8);
-            codeSet.push(code)
+    const isUtf16LE = char1 === 0xff && char2 === 0xfe;
+    const isUtf16BE = char1 === 0xfe && char2 === 0xff;
+    if(isUtf16BE || isUtf16LE) {
+        let result = '';
+        for (let i = 2; i < input.length; i += 2) {
+            const [ charL, charB ] = input.slice(i, i + 2).sort(() => +isUtf16BE);
+            const code = charL | (charB << 8);
+            result += String.fromCharCode(code);
         }
-        return String.fromCharCode(...codeSet);
+        return result;
     }
     return denoDecoder.decode(input);
 }
