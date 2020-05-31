@@ -31,21 +31,21 @@ Deno.test('srtParser: text separated by \\r\\n', (): void => {
     assertEquals(actual, parserExpected);
 });
 
+Deno.test('srtParser: input UTF-16 Uint8Array', (): void => {
+    let str = Deno.readFileSync('./test.srt');
+    const actual = srtParser(str);
+    assertEquals(actual, parserExpected);
+});
+
 Deno.test('srt string to text', (): void => {
     const mockSrt = '1\n00:00:00,001 --> 00:00:00,002\nFive men is a juicy opportunity.\nOne man is a waste of ammo.';
     const expected = 'Five men is a juicy opportunity.\nOne man is a waste of ammo.';
     const actral = srtToText(mockSrt);
     assertEquals(actral, expected);
+    assertEquals(srtParser(mockSrt).toText(), expected);
 });
 
-Deno.test('srt AST to text', (): void => {
-    const srt = parserExpected;
-    const expected = 'Five men is a juicy opportunity.\nOne man is a waste of ammo.\nKeep the sand out of your weapons!';
-    const actral = srtToText(srt);
-    assertEquals(actral, expected);
-});
-
-Deno.test('srt Blank line', (): void => {
+Deno.test('srt blank lines', (): void => {
     const mockSrt = '1\n00:00:00,001 --> 00:00:00,002\n\n\n2\n00:01:00,001 --> 00:02:00,002\nOne\n\n';
     const actual = srtParser(mockSrt);
     assertEquals(actual[0].text, '');
