@@ -28,3 +28,24 @@ export function $merge(keyArray: string[] = [], valueArray: any[] = []): object 
 //     }
 //     return fileContent;
 // }
+
+// decode utf8 and utf16
+export function $utfDecoder(input: Uint8Array): string {
+    const denoDecoder = new TextDecoder('utf-8', {
+        ignoreBOM: true
+    });
+    const [ char1, char2 ] = input;
+    const isUTF16LE = char1 === 0xff && char2 === 0xfe;
+    const isUTF16GE = char1 === 0xfe && char2 === 0xff;
+    if(isUTF16GE || isUTF16LE) {
+        const codeSet = [];
+        for (let i = 2; i < input.length; i+=2) {
+            const code = isUTF16GE
+            ? input[i+1]|(input[i] << 8)
+            : input[i]|(input[i + 1] << 8);
+            codeSet.push(code)
+        }
+        return String.fromCharCode(...codeSet);
+    }
+    return denoDecoder.decode(input);
+}

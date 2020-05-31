@@ -1,14 +1,14 @@
-import { $parseTime, $merge } from './util.ts';
+import { $parseTime, $merge, $utfDecoder } from './util.ts';
 import { assertEquals } from './deps.ts';
 
-Deno.test('util.parseTime() function', (): void => {
+Deno.test('util.parseTime()', (): void => {
     const timeStr = '01:02:05,500';
     const expected = ((60 + 2) * 60 + 5) * 1000 + 500;
     const actual = $parseTime(timeStr);
     assertEquals(actual, expected);
 });
 
-Deno.test('util.merge() function', (): void => {
+Deno.test('util.merge()', (): void => {
     const arr1 = ['key1', 'key2', 'key3'];
     const arr2 = ['v1', 'v2', 'v3'];
     const actual = $merge(arr1, arr2);
@@ -18,4 +18,23 @@ Deno.test('util.merge() function', (): void => {
         key3: 'v3'
     }
     assertEquals(actual, expected);
+});
+
+
+Deno.test('util.$utfDecoder()', (): void => {
+    const dataUcs2BE = new Uint8Array([254, 255,  0, 49,   0, 48, 78,7, 255, 12, 81, 107, 83, 67, 145, 204,  0, 63]);
+    const dataUcs2LE = new Uint8Array([255, 254,  49,   0, 48,  0,  7,78,  12, 255, 107, 81, 67, 83, 204, 145,  63,   0]);
+    const dataUtf8Bom = new Uint8Array([239, 187, 191,  49,  48, 228, 184, 135, 239, 188, 140, 229, 133, 171, 229, 141, 131, 233, 135, 140, 63]);
+    const dataUtf8 = new Uint8Array([49,  48, 228, 184, 135, 239, 188, 140, 229, 133, 171, 229, 141, 131, 233, 135, 140, 63]);
+
+    const actualUcs2BE = $utfDecoder(dataUcs2BE);
+    const actualUcs2LE = $utfDecoder(dataUcs2LE);
+    const actualUtf8Bom = $utfDecoder(dataUtf8Bom);
+    const actualUtf8 = $utfDecoder(dataUtf8);
+    const expected = '10万，八千里?';
+    
+    assertEquals(actualUcs2BE, expected);
+    assertEquals(actualUcs2LE, expected);
+    assertEquals(actualUtf8Bom, expected);
+    assertEquals(actualUtf8, expected);
 });
