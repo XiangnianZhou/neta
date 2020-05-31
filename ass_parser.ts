@@ -272,9 +272,10 @@ function parseEvents(lines: string[]): Events {
 
 function toSrt(assJson: AssJson): string {
     const srtData: SrtASTExpression[] = assToSrtAST(assJson);
+    const srtTime = (s: string) => s.replace('.', ',');
     return srtData.map(segment => {
         const { start, num, end, text } = segment;
-        return `${num}\n${start} --> ${end}\n${text}`;
+        return `${num}\n${srtTime(start)} --> ${srtTime(end)}\n${text}`;
     }).join('\n\n');
 }
 
