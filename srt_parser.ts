@@ -1,6 +1,6 @@
-import { $parseTime } from './util.ts';
+import { $parseTime, $utfDecoder } from './util.ts';
 
-interface ASTExpression {
+interface srtData {
     start: number,
     end: number,
     text: string,
@@ -8,30 +8,42 @@ interface ASTExpression {
     time: string[]      // raw string
 }
 
+class SrtArray extends Array<srtData> {
+    toText(): string {
+        return toText(this);
+    }
+}
+
 /**
  * Converts srt subtitles into array of objects
  */
-export function srtParser(srtString: string = ''): ASTExpression[] {
+export function srtParser(srtData: string | Uint8Array = ''): SrtArray {
+    let srtString: string = typeof srtData === 'string' ? srtData : $utfDecoder(srtData);
     srtString = srtString.replace(/\r?\n/g, '\n').replace(/\n+$/, '');
-    return srtString.split(/\n{2,}/).filter(t => t).map(segment => {
-        const lines: string[] = segment.split(/\n/);
-        const num: number = +lines[0];
-        const rawTime: string[] = lines[1].split(' --> ');
-        const [ start, end ] = rawTime.map(t => $parseTime(t));
-        const text: string = lines.slice(2).join("\n");
-        return {
-            num, start, end, text, time: rawTime
-        };
-    });
+    const result = new SrtArray();
+    for (let segment of srtString.split(/\n{2,}/)) {
+        if(!!segment) {
+            const lines: string[] = segment.split(/\n/);
+            const num: number = +lines[0];
+            const rawTime: string[] = lines[1].split(' --> ');
+            const [ start, end ] = rawTime.map($parseTime);
+            const text: string = lines.slice(2).join("\n");
+            result.push({
+                num, start, end, text, time: rawTime
+            });
+        }
+    }
+    return result;
 }
 
 /**
  * extract text from srt subtitles
  */
-export function srtToText(srtData: string | ASTExpression[]) {
-    if(!srtData) {
-        return '';
-    }
-    let ast: ASTExpression[] = typeof srtData === 'string' ? srtParser(srtData) : srtData;
+export function srtToText(srtData: string | Uint8Array) {
+    let ast: SrtArray = srtParser(srtData);
+    return toText(ast);
+}
+
+function toText(ast: srtData[]): string {
     return ast.map(a => a.text).join('\n');
 }
