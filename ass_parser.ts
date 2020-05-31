@@ -103,7 +103,7 @@ export function assParser(ass: string | Uint8Array = ''): AssData {
 
     const sections = assString.split(/^\[(.+?)\]\n/mg).slice(1);
     const otherSections: {[key: string]: string} = {};
-    for(let i = 0; i < sections.length; i+= 2) {
+    for(let i = 0; i < sections.length; i += 2) {
         const sectionName = sections[i];
         const lines: string[] = sections[i + 1].split(/\n/).filter(l => !/^\s*$/.test(l));
         
