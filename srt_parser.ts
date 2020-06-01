@@ -26,7 +26,7 @@ export function srtParser(srtData: string | Uint8Array = ''): SrtArray {
             const lines: string[] = segment.split(/\n/);
             const num: number = +lines[0];
             const rawTime: string[] = lines[1].split(' --> ');
-            const [ start, end ] = rawTime.map($parseTime);
+            const [ start = 0, end = 0 ] = rawTime.map($parseTime);
             const text: string = lines.slice(2).join("\n");
             result.push({
                 num, start, end, text, time: rawTime
