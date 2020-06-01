@@ -144,12 +144,12 @@ Deno.test('assParser: other sections', (): void => {
 });
 
 const expectedSrt = `1
-0:00:01.18 --> 0:00:06.85
+0:00:01,18 --> 0:00:06,85
 Like an Angel with pity on nobody
 The second line in subtitle
 
 2
-0:05:42.69 --> 0:05:46.46
+0:05:42,69 --> 0:05:46,46
 避开弹坑 分成左右两列
 Clear the mortar hole! Right and left!`;
 
