@@ -87,7 +87,9 @@ interface SrtASTExpression {
 // Converts ASSString ( E.g. Deno.readTextFileSync('t.ass') ) to JSON
 export function assParser(ass: string | Uint8Array = ''): AssData {
     let assString: string = typeof ass === 'string' ? ass : $utfDecoder(ass);
-    assString = assString.replace(/\r?\n/g, '\n');
+    assString = assString
+    .replace(/\r?\n/g, '\n')
+    .replace(/^(?:\[[Vv]4\+? Styles]\n){2}/m, '[V4+ Styles]\n');  // remove repeat declare of "Styles"
     if (!assString.startsWith('[Script Info]')) {
         throw 'ASS string should start with “[Script Info]”';
     }
@@ -102,6 +104,7 @@ export function assParser(ass: string | Uint8Array = ''): AssData {
     };
 
     const sections = assString.split(/^\[(.+?)\]\n/mg).slice(1);
+
     const otherSections: {[key: string]: string} = {};
     for(let i = 0; i < sections.length; i += 2) {
         const sectionName = sections[i];
