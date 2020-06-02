@@ -1,4 +1,4 @@
-import { $parseTime, $merge, $utfDecoder } from './util.ts';
+import { $parseTime, $merge, $utfDecoder, $parseSrtFormatting } from './util.ts';
 import { assertEquals } from './deps.ts';
 
 Deno.test('util.parseTime()', (): void => {
@@ -37,4 +37,74 @@ Deno.test('util.$utfDecoder()', (): void => {
     assertEquals(actualUcs2LE, expected);
     assertEquals(actualUtf8Bom, expected);
     assertEquals(actualUtf8, expected);
+});
+
+
+Deno.test('util.$parseSrtFormatting()', (): void => {
+    // i just wanna run
+    const linePositionStr = `{\\a7}`;
+    assertEquals($parseSrtFormatting(linePositionStr).children[0], {
+        node: 'line-position',
+        children: ['7']
+    });
+
+    const chars = 'I just wanna\n run';
+    assertEquals($parseSrtFormatting(chars).children[0], {
+        node: 'text',
+        children: ['I just wanna\n run']
+    });
+
+    const tags = '<b>I just <wanna> \nrun</b>';
+    assertEquals($parseSrtFormatting(tags).children[0], {
+        node: 'b',
+        children: [
+            {
+                node: 'text',
+                children: ['I just <wanna> \nrun']
+            }
+        ]
+    });
+
+    const multiTags = '<i>I just <wanna></i><b> run</b>';
+    assertEquals($parseSrtFormatting(multiTags).children, [
+        {
+            node: 'i',
+            children: [
+                {
+                    node: 'text',
+                    children: ['I just <wanna>']
+                }
+            ]
+        },
+        {
+            node: 'b',
+            children: [
+                {
+                    node: 'text',
+                    children: [' run']
+                }
+            ]
+        }
+    ]);
+
+    const nestedTags = '<b>I just <u>wanna</u> run</b>';
+    assertEquals($parseSrtFormatting(nestedTags).children[0].children, [
+        {
+            node: 'text',
+            children: ['I just ']
+        }, 
+        {
+            node: 'u',
+            children: [
+                {
+                    node: 'text',
+                    children: ['wanna']
+                }
+            ]
+        },
+        {
+            node: 'text',
+            children: [' run']
+        }
+    ]);
 });
