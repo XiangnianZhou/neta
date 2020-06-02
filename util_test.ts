@@ -54,6 +54,18 @@ Deno.test('util.$parseSrtFormatting()', (): void => {
         children: ['I just wanna\n run']
     });
 
+    const fontTag = '<font color=#ff0000>I just wanna run</font>';
+    assertEquals($parseSrtFormatting(fontTag).children[0], {
+        node: 'font',
+        children: [
+            {
+                node: 'text',
+                children: ['I just wanna run']
+            }
+        ],
+        attr: { color: "#ff0000" }
+    });
+
     const tags = '<b>I just <wanna> \nrun</b>';
     assertEquals($parseSrtFormatting(tags).children[0], {
         node: 'b',

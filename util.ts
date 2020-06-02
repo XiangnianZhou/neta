@@ -72,8 +72,8 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
     let plainText: string = '';
     let currentParent: Eelement|null = null;
     const startTagReg = /^[<{]([biu])\s*[>}]/;
-    const attrReg = /(\w+)\s*=\s*"([-\w#_ ]+)"\s*/
-    const fontStartTagReg = new RegExp(`^<(font)\s*(${attrReg})+>`);
+    const attrReg = /(\w+)\s*=\s*"?([-\w#_ ]+)"?\s*/;
+    const fontStartTagReg = new RegExp(`^<(font)\\s*(${attrReg.source})+>`);
     const linePositionReg = /{\\a(\d+)}/;
     const endTagReg = /^[<{]\/([biu])\s*[>}]/;
     const fontEngTagReg = /^<\/(font)\s*>/;
