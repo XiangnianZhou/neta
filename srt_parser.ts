@@ -1,10 +1,11 @@
-import { $parseTime, $utfDecoder } from './util.ts';
+import { $parseTime, $utfDecoder, $parseSrtFormatting, Eelement } from './util.ts';
 
 interface srtData {
     start: number,
     end: number,
     text: string,
     num: number,
+    children: Eelement[],
     time: string[]      // raw string
 }
 
@@ -27,9 +28,10 @@ export function srtParser(srtData: string | Uint8Array = ''): SrtArray {
             const num: number = +lines[0];
             const rawTime: string[] = lines[1].split(' --> ');
             const [ start = 0, end = 0 ] = rawTime.map($parseTime);
-            const text: string = lines.slice(2).join("\n");
+            const rawText: string = lines.slice(2).join("\n");
+            const { text, children } = $parseSrtFormatting(rawText);
             result.push({
-                num, start, end, text, time: rawTime
+                num, start, end, text, time: rawTime, children
             });
         }
     }

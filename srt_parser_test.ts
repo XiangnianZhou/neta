@@ -7,13 +7,25 @@ const parserExpected = [
         start: 1,
         end: 2,
         text: 'Five men is a juicy opportunity.\nOne man is a waste of ammo.',
-        time: ['00:00:00,001', '00:00:00,002']
+        time: ['00:00:00,001', '00:00:00,002'],
+        children: [
+            {
+                node: 'text',
+                children: ['Five men is a juicy opportunity.\nOne man is a waste of ammo.']
+            }
+        ]
     }, {
         num: 2,
         start: 100,
         end: 200,
         text: 'Keep the sand out of your weapons!',
-        time: ['00:00:00,100', '00:00:00,200']
+        time: ['00:00:00,100', '00:00:00,200'],
+        children: [
+            {
+                node: 'text',
+                children: ['Keep the sand out of your weapons!']
+            }
+        ]
     }
 ];
 
@@ -35,6 +47,21 @@ Deno.test('srtParser: input UTF-16 Uint8Array', (): void => {
     let str = Deno.readFileSync('./test.srt');
     const actual = srtParser(str);
     assertEquals(actual, parserExpected);
+});
+
+Deno.test('srtParser: parse formatting', (): void => {
+    const mockSrt = '1\n00:00:00,001 --> 00:00:00,002\n<i>thought\nbeginning.</i>';
+    const actual = srtParser(mockSrt);
+    assertEquals(actual[0].text, 'thought\nbeginning.');
+    assertEquals(actual[0].children[0], {
+        node: 'i',
+        children: [
+            {
+                node: 'text',
+                children: [ 'thought\nbeginning.' ]
+            }
+        ]
+    });
 });
 
 Deno.test('srt string to text', (): void => {
