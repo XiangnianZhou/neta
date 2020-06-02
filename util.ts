@@ -71,12 +71,12 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
     const elems: Eelement[] = [];
     let plainText: string = '';
     let currentParent: Eelement|null = null;
-    const startTagReg = /^[<{]([biu])\s*[>}]/;
+    const startTagReg = /^[<{]\s*([biu])\s*[>}]/i;
     const attrReg = /(\w+)\s*=\s*"?([-\w#_ ]+)"?\s*/;
-    const fontStartTagReg = new RegExp(`^<(font)\\s*(${attrReg.source})+>`);
-    const linePositionReg = /{\\a(\d+)}/;
-    const endTagReg = /^[<{]\/([biu])\s*[>}]/;
-    const fontEngTagReg = /^<\/(font)\s*>/;
+    const fontStartTagReg = new RegExp(`^<\\s*(font)\\s*(${attrReg.source})+>`, 'i');
+    const linePositionReg = /{\\a(\d+)}/i;
+    const endTagReg = /^[<{]\/\s*([biu])\s*[>}]/i;
+    const fontEngTagReg = /^<\/\s*(font)\s*>/i;
     while (text.length > 0) {
         // Line position
         let ischars = true;
@@ -104,7 +104,7 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
             const match = text.match(startTagReg) || text.match(fontStartTagReg);
             if (match) {
                 const elem: Eelement = {
-                    node: <Eelement['node']>match[1],
+                    node: <Eelement['node']>match[1].toLowerCase(),
                     children: []
                 }
 

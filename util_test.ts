@@ -119,4 +119,15 @@ Deno.test('util.$parseSrtFormatting()', (): void => {
             children: [' run']
         }
     ]);
+
+    const ignoreCase = '<B>I just <wanna> \nrun</b>';
+    assertEquals($parseSrtFormatting(ignoreCase).children[0], {
+        node: 'b',
+        children: [
+            {
+                node: 'text',
+                children: ['I just <wanna> \nrun']
+            }
+        ]
+    });
 });
