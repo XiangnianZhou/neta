@@ -22,9 +22,9 @@ export function srtParser(srtData: string | Uint8Array = ''): SrtArray {
     let srtString: string = typeof srtData === 'string' ? srtData : $utfDecoder(srtData);
     srtString = srtString.replace(/\r?\n/g, '\n').replace(/\n+$/, '');
     const result = new SrtArray();
-    for (let segment of srtString.split(/\n{2,}(?=\d+)/)) {
+    for (let segment of srtString.split(/\n{2,}(?=\d+\n)/)) {
         if(!!segment) {
-            const lines: string[] = segment.split(/\n/);
+            const lines: string[] = segment.split(/\n+/);
             const num: number = +lines[0];
             const rawTime: string[] = lines[1].split(' --> ');
             const [ start = 0, end = 0 ] = rawTime.map($parseTime);
