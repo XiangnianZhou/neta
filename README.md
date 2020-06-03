@@ -51,4 +51,5 @@ console.log(ast);
 * [ ] Chinese documents;
 * [x] Parse SRT Formatting;
 * [ ] Parse ASS override;
+* [ ] WebVTT parser;
 * [ ] Support Node.js;
