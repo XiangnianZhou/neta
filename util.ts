@@ -94,7 +94,7 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
         } else if (/^[{<]\//.test(text)) {
             const match = text.match(endTagReg) || text.match(fontEngTagReg);
             if (match) {
-                stack.length -= 1
+                stack.pop();
                 currentParent = stack[stack.length - 1];
                 text = text.substring(match[0].length);
                 ischars = false;
