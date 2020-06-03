@@ -16,7 +16,7 @@ await Deno.writeTextFile('./subtitle.txt', text);
 Becuase APIs are not stable enough now, I recommend that you specify the version when you import Neta. like this:
 
 ```typescript
-import { srtToText } from 'https://deno.land/x/neta@v0.5.2/mod.ts';
+import { srtToText } from 'https://deno.land/x/neta@v0.5.3/mod.ts';
 ```
 
 # API
