@@ -91,7 +91,7 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
                 ischars = false;
             }
         // end tag
-        } else if (/^[{<}]\//.test(text)) {
+        } else if (/^[{<]\//.test(text)) {
             const match = text.match(endTagReg) || text.match(fontEngTagReg);
             if (match) {
                 stack.length -= 1
@@ -151,8 +151,8 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
                 }
             }
 
-            const chars = index < 0 ? text : text.substring(0, index);
-            text = index < 0 ? '' : text.substring(index);
+            const chars = index <= 0 ? text : text.substring(0, index);
+            text = index <= 0 ? '' : text.substring(index);
             plainText += chars;
             (currentParent ? currentParent.children : elems).push({
                 node: 'text',
