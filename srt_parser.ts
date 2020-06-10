@@ -1,11 +1,11 @@
-import { $parseTime, $utfDecoder, $parseSrtFormatting, Eelement } from './util.ts';
+import { $parseTime, $utfDecoder, $parseSrtFormatting, Element } from './util.ts';
 
 interface srtData {
     start: number,
     end: number,
     text: string,
     num: number,
-    children: Eelement[],
+    children: Element[],
     time: string[]      // raw string
 }
 

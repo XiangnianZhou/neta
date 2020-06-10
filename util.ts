@@ -49,9 +49,9 @@ export function $utfDecoder(input: Uint8Array): string {
 }
 
 
-export interface Eelement {
+export interface Element {
     node: 'b' | 'u' | 'i' | 'font' | 'text' | 'line-position',
-    children: Array<string|Eelement>,
+    children: Array<string|Element>,
     attr?: {
         [name: string]: string
     }
@@ -65,11 +65,11 @@ export interface Eelement {
  * 3. Line position – {\a7}
  * https://en.wikipedia.org/wiki/SubRip
  */
-export function $parseSrtFormatting(text: string): { children: Eelement[], text: string } {
-    const stack: Eelement[] = [];
-    const elems: Eelement[] = [];
+export function $parseSrtFormatting(text: string): { children: Element[], text: string } {
+    const stack: Element[] = [];
+    const elems: Element[] = [];
     let plainText: string = '';
-    let currentParent: Eelement|null = null;
+    let currentParent: Element|null = null;
     const startTagReg = /^[<{]\s*([biu])\s*[>}]/i;
     const attrReg = /(\w+)\s*=\s*"?([-\w#_ ]+)"?\s*/;
     const fontStartTagReg = new RegExp(`^<\\s*(font)\\s*(${attrReg.source})+>`, 'i');
@@ -102,8 +102,8 @@ export function $parseSrtFormatting(text: string): { children: Eelement[], text:
         } else if (/^[<{]/.test(text)) {
             const match = text.match(startTagReg) || text.match(fontStartTagReg);
             if (match) {
-                const elem: Eelement = {
-                    node: <Eelement['node']>match[1].toLowerCase(),
+                const elem: Element = {
+                    node: <Element['node']>match[1].toLowerCase(),
                     children: []
                 }
 
