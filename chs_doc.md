@@ -99,3 +99,13 @@ console.log(ast);
 ]
 ```
 
+srtParser 除了可以接受字符串参数外，还可以接受一个 Uint8Array。当字幕需要从文件中读取，且不确定文件的编码方式时，需要使用此参数。
+
+目前 Neta 支持解码 UTF8，UTF8 BOM，UTF16（UCS-2 BE 和 UCS-2 LE）。
+
+```js
+const subtitle = await Deno.readFile('x.srt');
+const ast = srtParser(srtString);
+```
+
+
